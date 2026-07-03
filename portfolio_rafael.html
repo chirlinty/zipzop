@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rafael — Portfólio Data / BI / AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root{
+    --bg: #0B1220;
+    --surface: #121A2E;
+    --surface-alt: #1B2440;
+    --border: rgba(255,255,255,0.09);
+    --text: #E8ECF5;
+    --text-muted: #8D96AC;
+    --teal: #2DD4BF;
+    --amber: #F5A623;
+    --teal-dim: rgba(45,212,191,0.14);
+    --amber-dim: rgba(245,166,35,0.14);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(45,212,191,0.10), transparent),
+      radial-gradient(ellipse 700px 500px at 100% 0%, rgba(245,166,35,0.08), transparent),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.5;
+  }
+  ::selection{ background: var(--teal); color:#08131A; }
+  a{color:inherit;}
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  .display{ font-family:'Space Grotesk', sans-serif; }
+  :focus-visible{ outline:2px solid var(--teal); outline-offset:3px; border-radius:4px; }
+
+  .wrap{ max-width:1080px; margin:0 auto; padding:0 28px; }
+
+  /* NAV */
+  nav{
+    position:sticky; top:0; z-index:50;
+    backdrop-filter: blur(14px);
+    background: rgba(11,18,32,0.75);
+    border-bottom:1px solid var(--border);
+  }
+  nav .wrap{ display:flex; align-items:center; justify-content:space-between; padding:16px 28px; }
+  .brand{ display:flex; align-items:center; gap:10px; font-family:'Space Grotesk'; font-weight:600; font-size:16px; }
+  .brand .dot{ width:9px; height:9px; border-radius:50%; background:var(--teal); box-shadow:0 0 12px var(--teal); }
+  nav ul{ display:flex; gap:28px; list-style:none; margin:0; padding:0; }
+  nav a{ text-decoration:none; color:var(--text-muted); font-size:14px; font-weight:500; transition:color .15s; }
+  nav a:hover{ color:var(--text); }
+  .nav-links{ display:flex; }
+  @media (max-width:640px){ .nav-links{ display:none; } }
+
+  /* HERO */
+  .hero{ padding:88px 0 40px; }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:'JetBrains Mono'; font-size:12.5px; color:var(--teal);
+    background:var(--teal-dim); border:1px solid rgba(45,212,191,0.3);
+    padding:6px 12px; border-radius:20px; margin-bottom:22px;
+  }
+  h1.display{
+    font-size:clamp(32px, 5.2vw, 54px);
+    font-weight:600; line-height:1.08; margin:0 0 20px; letter-spacing:-0.02em;
+    max-width:820px;
+  }
+  h1.display .accent{ color:var(--teal); }
+  .hero p.lede{
+    font-size:18px; color:var(--text-muted); max-width:600px; margin:0 0 32px;
+  }
+  .cta-row{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:56px; }
+  .btn{
+    font-family:'Inter'; font-weight:600; font-size:14.5px;
+    padding:12px 22px; border-radius:9px; text-decoration:none;
+    display:inline-flex; align-items:center; gap:8px; transition:transform .15s, background .15s;
+  }
+  .btn-primary{ background:var(--teal); color:#06201C; }
+  .btn-primary:hover{ transform:translateY(-1px); background:#3ee0c9; }
+  .btn-ghost{ background:transparent; border:1px solid var(--border); color:var(--text); }
+  .btn-ghost:hover{ border-color:rgba(255,255,255,0.25); }
+
+  /* live stat strip */
+  .stat-strip{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+    background:var(--border); border:1px solid var(--border); border-radius:12px; overflow:hidden;
+  }
+  .stat{ background:var(--surface); padding:20px 22px; }
+  .stat .num{ font-family:'JetBrains Mono'; font-size:24px; font-weight:600; color:var(--teal); }
+  .stat .lbl{ font-size:12.5px; color:var(--text-muted); margin-top:4px; }
+  @media (max-width:700px){ .stat-strip{ grid-template-columns:repeat(2,1fr); } }
+
+  /* SECTION shared */
+  section{ padding:80px 0; border-top:1px solid var(--border); }
+  .section-head{ margin-bottom:40px; }
+  .section-tag{ font-family:'JetBrains Mono'; font-size:12px; color:var(--amber); letter-spacing:.06em; text-transform:uppercase; margin-bottom:10px; }
+  h2.display{ font-size:clamp(24px,3vw,32px); font-weight:600; margin:0 0 12px; letter-spacing:-0.01em; }
+  .section-sub{ color:var(--text-muted); font-size:15.5px; max-width:640px; }
+
+  /* PROJECT: schema diagram */
+  .project-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:32px;
+    margin-bottom:28px;
+  }
+  .schema-svg{ width:100%; height:auto; display:block; margin:8px 0 4px; }
+
+  .code-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:28px; }
+  @media (max-width:800px){ .code-grid{ grid-template-columns:1fr; } }
+  .code-card{
+    background:#0A1120; border:1px solid var(--border); border-radius:12px; overflow:hidden;
+  }
+  .code-card .code-head{
+    display:flex; align-items:center; gap:8px; padding:11px 16px;
+    border-bottom:1px solid var(--border); font-family:'JetBrains Mono'; font-size:12px; color:var(--text-muted);
+  }
+  .code-card .code-head .tag{ width:8px;height:8px;border-radius:50%; }
+  .code-card pre{
+    margin:0; padding:18px 16px; font-family:'JetBrains Mono'; font-size:12.5px; line-height:1.65;
+    color:#C9D6EA; overflow-x:auto;
+  }
+  .code-card .kw{ color:var(--amber); }
+  .code-card .fn{ color:var(--teal); }
+  .code-card .str{ color:#9FCF8B; }
+  .code-card .cm{ color:#5F6B84; }
+
+  /* DASHBOARD DEMO */
+  .dash-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:16px; overflow:hidden;
+  }
+  .dash-topbar{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
+    padding:16px 22px; border-bottom:1px solid var(--border); background:var(--surface-alt);
+  }
+  .dash-title{ font-family:'JetBrains Mono'; font-size:13px; color:var(--text-muted); display:flex; align-items:center; gap:9px; }
+  .live-dot{ width:7px; height:7px; border-radius:50%; background:var(--teal); animation:pulse 2s infinite; }
+  @media (prefers-reduced-motion: reduce){ .live-dot{ animation:none; } }
+  @keyframes pulse{ 0%,100%{opacity:1;} 50%{opacity:.35;} }
+  .tabs{ display:flex; gap:6px; }
+  .tab-btn{
+    font-family:'Inter'; font-weight:600; font-size:13px; color:var(--text-muted);
+    background:transparent; border:1px solid var(--border); padding:8px 14px; border-radius:8px; cursor:pointer;
+    transition:all .15s;
+  }
+  .tab-btn.active{ background:var(--teal-dim); border-color:rgba(45,212,191,0.4); color:var(--teal); }
+  .dash-body{ padding:26px; }
+  .kpi-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:22px; }
+  @media (max-width:700px){ .kpi-row{ grid-template-columns:repeat(2,1fr); } }
+  .kpi{ background:var(--surface-alt); border:1px solid var(--border); border-radius:10px; padding:16px 18px; }
+  .kpi .kpi-lbl{ font-size:12px; color:var(--text-muted); margin-bottom:6px; }
+  .kpi .kpi-val{ font-family:'JetBrains Mono'; font-size:20px; font-weight:600; }
+  .kpi .kpi-delta{ font-family:'JetBrains Mono'; font-size:11.5px; margin-top:4px; }
+  .up{ color:var(--teal); } .down{ color:#F26B6B; }
+  .chart-grid{ display:grid; grid-template-columns:1.4fr 1fr; gap:16px; }
+  @media (max-width:800px){ .chart-grid{ grid-template-columns:1fr; } }
+  .chart-box{ background:var(--surface-alt); border:1px solid var(--border); border-radius:10px; padding:18px; }
+  .chart-box h4{ margin:0 0 14px; font-size:13px; font-weight:600; color:var(--text-muted); font-family:'Inter'; text-transform:uppercase; letter-spacing:.03em; }
+  .chart-box canvas{ max-height:230px; }
+  .panel{ display:none; }
+  .panel.active{ display:block; }
+
+  /* SKILLS */
+  .skills-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  @media (max-width:700px){ .skills-grid{ grid-template-columns:repeat(2,1fr); } }
+  .skill-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px;
+    transition:border-color .15s, transform .15s;
+  }
+  .skill-card:hover{ border-color:rgba(45,212,191,0.35); transform:translateY(-2px); }
+  .skill-card .s-name{ font-family:'Space Grotesk'; font-weight:600; font-size:15.5px; margin-bottom:6px; }
+  .skill-card .s-desc{ font-size:13px; color:var(--text-muted); line-height:1.55; }
+
+  /* FOOTER */
+  footer{ padding:60px 0 50px; }
+  .foot-grid{ display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:24px; }
+  footer h3.display{ font-size:26px; margin:0 0 10px; }
+  footer p{ color:var(--text-muted); font-size:14.5px; max-width:420px; margin:0 0 20px; }
+  .contact-row{ display:flex; gap:14px; flex-wrap:wrap; }
+  .copyright{ margin-top:50px; padding-top:22px; border-top:1px solid var(--border); font-size:12.5px; color:var(--text-muted); font-family:'JetBrains Mono'; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand"><span class="dot"></span> Rafael <span style="color:var(--text-muted); font-weight:500;">· Data / BI / AI</span></div>
+    <ul class="nav-links">
+      <li><a href="#projeto">Projeto</a></li>
+      <li><a href="#dashboard">Dashboard</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contato">Contato</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">● disponível para estágio — data / bi / ai</div>
+    <h1 class="display">Transformo planilhas soltas em <span class="accent">decisão de negócio.</span></h1>
+    <p class="lede">Estudante de Data, BI &amp; IA em busca de estágio na área. Modelo dados, construo dashboards e escrevo as medidas DAX que fazem o número contar uma história — do jeito que fiz com o ZipStore, o e-commerce fictício do meu projeto de faculdade.</p>
+    <div class="cta-row">
+      <a href="#dashboard" class="btn btn-primary">Ver dashboard ao vivo →</a>
+      <a href="#contato" class="btn btn-ghost">Falar comigo</a>
+    </div>
+
+    <div class="stat-strip">
+      <div class="stat"><div class="num">3</div><div class="lbl">tabelas dimensionais modeladas</div></div>
+      <div class="stat"><div class="num">12+</div><div class="lbl">medidas DAX escritas</div></div>
+      <div class="stat"><div class="num">Star</div><div class="lbl">schema, do zero</div></div>
+      <div class="stat"><div class="num">100%</div><div class="lbl">Power Query / M</div></div>
+    </div>
+  </div>
+</header>
+
+<section id="projeto">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-tag">Projeto em destaque</div>
+      <h2 class="display">ZipStore — modelagem dimensional de um e-commerce</h2>
+      <p class="section-sub">Projeto acadêmico onde peguei uma base bruta de vendas, cliente e tempo de um e-commerce fictício e construí a camada analítica do zero: schema em estrela, transformação em Power Query e as medidas DAX que alimentam o dashboard abaixo.</p>
+    </div>
+
+    <div class="project-card">
+      <h4 style="margin:0 0 4px; font-family:'Space Grotesk'; font-size:15px; color:var(--text-muted); font-weight:600; text-transform:uppercase; letter-spacing:.03em;">Star Schema</h4>
+      <svg class="schema-svg" viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg">
+        <line x1="450" y1="150" x2="230" y2="60" stroke="#2A344F" stroke-width="2"/>
+        <line x1="450" y1="150" x2="670" y2="60" stroke="#2A344F" stroke-width="2"/>
+        <line x1="450" y1="150" x2="230" y2="240" stroke="#2A344F" stroke-width="2"/>
+        <line x1="450" y1="150" x2="670" y2="240" stroke="#2A344F" stroke-width="2"/>
+
+        <g>
+          <rect x="360" y="115" width="180" height="70" rx="10" fill="#1B2440" stroke="#2DD4BF" stroke-width="1.5"/>
+          <text x="450" y="142" text-anchor="middle" fill="#2DD4BF" font-family="JetBrains Mono" font-size="13" font-weight="600">Fato_Vendas</text>
+          <text x="450" y="162" text-anchor="middle" fill="#8D96AC" font-family="JetBrains Mono" font-size="10.5">valor · qtde · fk's</text>
+        </g>
+
+        <g>
+          <rect x="140" y="25" width="170" height="60" rx="9" fill="#121A2E" stroke="#F5A623" stroke-width="1.3"/>
+          <text x="225" y="50" text-anchor="middle" fill="#F5A623" font-family="JetBrains Mono" font-size="12.5" font-weight="600">Dim_Cliente</text>
+          <text x="225" y="68" text-anchor="middle" fill="#8D96AC" font-family="JetBrains Mono" font-size="10">segmento · região</text>
+        </g>
+
+        <g>
+          <rect x="590" y="25" width="170" height="60" rx="9" fill="#121A2E" stroke="#F5A623" stroke-width="1.3"/>
+          <text x="675" y="50" text-anchor="middle" fill="#F5A623" font-family="JetBrains Mono" font-size="12.5" font-weight="600">Dim_Produto</text>
+          <text x="675" y="68" text-anchor="middle" fill="#8D96AC" font-family="JetBrains Mono" font-size="10">categoria · sku</text>
+        </g>
+
+        <g>
+          <rect x="140" y="215" width="170" height="60" rx="9" fill="#121A2E" stroke="#F5A623" stroke-width="1.3"/>
+          <text x="225" y="240" text-anchor="middle" fill="#F5A623" font-family="JetBrains Mono" font-size="12.5" font-weight="600">Dim_Tempo</text>
+          <text x="225" y="258" text-anchor="middle" fill="#8D96AC" font-family="JetBrains Mono" font-size="10">data · mês · trimestre</text>
+        </g>
+
+        <g>
+          <rect x="590" y="215" width="170" height="60" rx="9" fill="#121A2E" stroke="#F5A623" stroke-width="1.3"/>
+          <text x="675" y="240" text-anchor="middle" fill="#F5A623" font-family="JetBrains Mono" font-size="12.5" font-weight="600">Dim_Loja</text>
+          <text x="675" y="258" text-anchor="middle" fill="#8D96AC" font-family="JetBrains Mono" font-size="10">canal · uf</text>
+        </g>
+      </svg>
+
+      <div class="code-grid">
+        <div class="code-card">
+          <div class="code-head"><span class="tag" style="background:var(--teal);"></span> DAX — medidas.pbi</div>
+          <pre>Receita Total <span class="kw">=</span>
+<span class="fn">SUM</span>(Fato_Vendas[Valor_Venda])
+
+Receita <span class="kw">YoY</span> % <span class="kw">=</span>
+<span class="fn">DIVIDE</span>(
+    [Receita Total] <span class="kw">-</span>
+      <span class="fn">CALCULATE</span>(
+        [Receita Total],
+        <span class="fn">SAMEPERIODLASTYEAR</span>(Dim_Tempo[Data])
+      ),
+    <span class="fn">CALCULATE</span>(
+      [Receita Total],
+      <span class="fn">SAMEPERIODLASTYEAR</span>(Dim_Tempo[Data])
+    )
+)</pre>
+        </div>
+        <div class="code-card">
+          <div class="code-head"><span class="tag" style="background:var(--amber);"></span> Power Query — M</div>
+          <pre><span class="kw">let</span>
+    Origem <span class="kw">=</span> <span class="fn">Csv.Document</span>(
+      <span class="fn">File.Contents</span>(<span class="str">"vendas_zipstore.csv"</span>)
+    ),
+    Cabecalho <span class="kw">=</span> <span class="fn">Table.PromoteHeaders</span>(Origem),
+    Tipado <span class="kw">=</span> <span class="fn">Table.TransformColumnTypes</span>(
+      Cabecalho,
+      {{<span class="str">"Data"</span>, <span class="kw">type date</span>},
+       {<span class="str">"Valor"</span>, <span class="kw">type number</span>}}
+    ),
+    <span class="cm">// remove devoluções e testes</span>
+    Filtrado <span class="kw">=</span> <span class="fn">Table.SelectRows</span>(
+      Tipado, <span class="kw">each</span> [Valor] <span class="kw">></span> 0
+    )
+<span class="kw">in</span>
+    Filtrado</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="dashboard">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-tag">Resultado</div>
+      <h2 class="display">Dashboard ZipStore</h2>
+      <p class="section-sub">Dados de demonstração — mesma estrutura e lógica do dashboard que construí no Power BI, reimplementado aqui em Chart.js pra você poder ver funcionando direto na página, sem precisar abrir arquivo nenhum.</p>
+    </div>
+
+    <div class="dash-card">
+      <div class="dash-topbar">
+        <div class="dash-title"><span class="live-dot"></span> zipstore_analytics.pbix — visão geral</div>
+        <div class="tabs" role="tablist">
+          <button class="tab-btn active" data-panel="vendas">Vendas</button>
+          <button class="tab-btn" data-panel="clientes">Clientes</button>
+          <button class="tab-btn" data-panel="tempo">Tempo</button>
+        </div>
+      </div>
+
+      <div class="dash-body">
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-lbl">Receita total</div><div class="kpi-val">R$ 486.2k</div><div class="kpi-delta up">▲ 14.3% vs ano anterior</div></div>
+          <div class="kpi"><div class="kpi-lbl">Ticket médio</div><div class="kpi-val">R$ 187,40</div><div class="kpi-delta up">▲ 5.1%</div></div>
+          <div class="kpi"><div class="kpi-lbl">Pedidos</div><div class="kpi-val">2.594</div><div class="kpi-delta up">▲ 8.7%</div></div>
+          <div class="kpi"><div class="kpi-lbl">Taxa de recompra</div><div class="kpi-val">31.2%</div><div class="kpi-delta down">▼ 1.4%</div></div>
+        </div>
+
+        <div id="panel-vendas" class="panel active">
+          <div class="chart-grid">
+            <div class="chart-box"><h4>Receita mensal (R$ mil)</h4><canvas id="chartReceita"></canvas></div>
+            <div class="chart-box"><h4>Top categorias</h4><canvas id="chartCategoria"></canvas></div>
+          </div>
+        </div>
+
+        <div id="panel-clientes" class="panel">
+          <div class="chart-grid">
+            <div class="chart-box"><h4>Novos vs. recorrentes</h4><canvas id="chartClientes"></canvas></div>
+            <div class="chart-box"><h4>Receita por região</h4><canvas id="chartRegiao"></canvas></div>
+          </div>
+        </div>
+
+        <div id="panel-tempo" class="panel">
+          <div class="chart-grid">
+            <div class="chart-box"><h4>Pedidos por dia da semana</h4><canvas id="chartDiaSemana"></canvas></div>
+            <div class="chart-box"><h4>Sazonalidade trimestral</h4><canvas id="chartTrimestre"></canvas></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="section-tag">Ferramentas</div>
+      <h2 class="display">O que eu uso pra chegar nesse resultado</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="skill-card"><div class="s-name">Power BI</div><div class="s-desc">Modelagem de dados, relacionamentos, dashboards multi-página.</div></div>
+      <div class="skill-card"><div class="s-name">DAX</div><div class="s-desc">Medidas, colunas calculadas, funções de time intelligence.</div></div>
+      <div class="skill-card"><div class="s-name">Power Query (M)</div><div class="s-desc">ETL, limpeza e transformação de dados brutos.</div></div>
+      <div class="skill-card"><div class="s-name">Modelagem dimensional</div><div class="s-desc">Star schema, tabelas fato e dimensão, granularidade.</div></div>
+      <div class="skill-card"><div class="s-name">SQL</div><div class="s-desc">Consultas e agregações para exploração de dados.</div></div>
+      <div class="skill-card"><div class="s-name">HTML / Chart.js</div><div class="s-desc">Dashboards leves e interativos fora do Power BI.</div></div>
+    </div>
+  </div>
+</section>
+
+<footer id="contato">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h3 class="display">Vamos conversar?</h3>
+        <p>Aberto a estágio em Data, BI ou IA — presencial em Aracaju/Sergipe ou remoto. Respondo rápido.</p>
+        <div class="contact-row">
+          <a href="mailto:seuemail@exemplo.com" class="btn btn-primary">seuemail@exemplo.com</a>
+          <a href="#" class="btn btn-ghost">LinkedIn</a>
+          <a href="#" class="btn btn-ghost">GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div class="copyright">
+      <span>Rafael — Data / BI / AI</span>
+      <span>Projeto ZipStore · dados de demonstração</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+Chart.defaults.color = '#8D96AC';
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.size = 11.5;
+const grid = { color:'rgba(255,255,255,0.06)' };
+const teal = '#2DD4BF', amber = '#F5A623';
+
+function grad(ctx, color){
+  const g = ctx.createLinearGradient(0,0,0,220);
+  g.addColorStop(0, color + '55');
+  g.addColorStop(1, color + '02');
+  return g;
+}
+
+const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+
+new Chart(document.getElementById('chartReceita'), {
+  type:'line',
+  data:{ labels:meses, datasets:[{
+    data:[28,31,29,35,38,34,41,44,39,47,52,68],
+    borderColor:teal, backgroundColor: (c)=>grad(c.chart.ctx, teal),
+    fill:true, tension:.35, pointRadius:0, borderWidth:2.5
+  }]},
+  options:{ plugins:{legend:{display:false}}, scales:{ x:{grid:{display:false}}, y:{grid} }, maintainAspectRatio:false }
+});
+
+new Chart(document.getElementById('chartCategoria'), {
+  type:'bar',
+  data:{ labels:['Eletrônicos','Moda','Casa','Beleza','Esporte'], datasets:[{
+    data:[142,118,96,74,58], backgroundColor:[teal,amber,'#5B8DEF','#B084F5','#F26B9B'], borderRadius:6
+  }]},
+  options:{ indexAxis:'y', plugins:{legend:{display:false}}, scales:{ x:{grid}, y:{grid:{display:false}} }, maintainAspectRatio:false }
+});
+
+new Chart(document.getElementById('chartClientes'), {
+  type:'doughnut',
+  data:{ labels:['Recorrentes','Novos'], datasets:[{ data:[31.2,68.8], backgroundColor:[teal,'#2A344F'], borderWidth:0 }]},
+  options:{ cutout:'72%', plugins:{legend:{position:'bottom'}}, maintainAspectRatio:false }
+});
+
+new Chart(document.getElementById('chartRegiao'), {
+  type:'bar',
+  data:{ labels:['Nordeste','Sudeste','Sul','C-Oeste','Norte'], datasets:[{
+    data:[186,152,71,48,29], backgroundColor:amber, borderRadius:6
+  }]},
+  options:{ plugins:{legend:{display:false}}, scales:{ x:{grid:{display:false}}, y:{grid} }, maintainAspectRatio:false }
+});
+
+new Chart(document.getElementById('chartDiaSemana'), {
+  type:'bar',
+  data:{ labels:['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'], datasets:[{
+    data:[62,58,65,71,89,94,52], backgroundColor:teal, borderRadius:6
+  }]},
+  options:{ plugins:{legend:{display:false}}, scales:{ x:{grid:{display:false}}, y:{grid} }, maintainAspectRatio:false }
+});
+
+new Chart(document.getElementById('chartTrimestre'), {
+  type:'line',
+  data:{ labels:['T1','T2','T3','T4'], datasets:[{
+    data:[88,107,124,157], borderColor:amber, backgroundColor:(c)=>grad(c.chart.ctx, amber),
+    fill:true, tension:.35, pointRadius:4, pointBackgroundColor:amber, borderWidth:2.5
+  }]},
+  options:{ plugins:{legend:{display:false}}, scales:{ x:{grid:{display:false}}, y:{grid} }, maintainAspectRatio:false }
+});
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-'+btn.dataset.panel).classList.add('active');
+  });
+});
+</script>
+
+</body>
+</html>
